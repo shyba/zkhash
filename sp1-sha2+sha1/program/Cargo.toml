@@ -1,0 +1,10 @@
+[package]
+version = "0.1.0"
+name = "hash-program"
+edition = "2021"
+
+[dependencies]
+alloy-sol-types = { workspace = true }
+alloy-primitives = "1.2.1"
+sp1-zkvm = "5.0.0"
+hash-lib = { path = "../lib" }
