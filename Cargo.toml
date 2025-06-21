@@ -1,0 +1,4 @@
+[workspace]
+resolver = "3"
+members = ["risc0-sha2+sha1/host", "risc0-sha2+sha1/methods",
+"sp1-sha2+sha1/lib", "sp1-sha2+sha1/program", "sp1-sha2+sha1/script"]
