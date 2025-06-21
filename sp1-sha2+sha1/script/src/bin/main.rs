@@ -10,6 +10,8 @@
 //! RUST_LOG=info cargo run --release -- --prove
 //! ```
 
+use std::io::{self, Read};
+
 use alloy_sol_types::SolType;
 use clap::Parser;
 use hash_lib::PublicValuesStruct;
@@ -27,18 +29,16 @@ struct Args {
 
     #[arg(long)]
     prove: bool,
-
-    #[arg(long, default_value = "Hello, World!")]
-    data: String,
 }
 
 fn main() {
     sp1_sdk::utils::setup_logger();
     dotenv::dotenv().ok();
 
-    let mut args = Args::parse();
+    let args = Args::parse();
 
-    args.data = String::from_utf8(vec![b'X'; 8192]).unwrap();
+    let mut buf = Vec::new();
+    io::stdin().read_to_end(&mut buf).unwrap();
 
     if args.execute == args.prove {
         eprintln!("Error: You must specify either --execute or --prove");
@@ -48,10 +48,9 @@ fn main() {
     let client = ProverClient::from_env();
 
     let mut stdin = SP1Stdin::new();
-    let data_bytes = args.data.as_bytes().to_vec();
-    stdin.write(&data_bytes);
+    stdin.write(&buf);
 
-    println!("data: {}", &args.data[..80]);
+    println!("input data size: {}", &buf.len());
 
     if args.execute {
         let (output, report) = client.execute(HASH_ELF, &stdin).run().unwrap();
@@ -63,7 +62,7 @@ fn main() {
         println!("sha1: {}", hex::encode(sha1));
         println!("sha2: {}", hex::encode(sha2));
 
-        let (expected_sha1, expected_sha256) = hash_lib::hash(data_bytes);
+        let (expected_sha1, expected_sha256) = hash_lib::hash(buf);
         assert_eq!(sha1, expected_sha1);
         assert_eq!(sha2, expected_sha256);
         println!("Hash values are correct!");

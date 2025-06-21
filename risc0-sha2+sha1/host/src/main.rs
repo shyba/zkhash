@@ -3,7 +3,7 @@ use clap::{Parser, Subcommand};
 use risc0_zkvm::{default_prover, ExecutorEnv, Receipt};
 use serde::{Deserialize, Serialize};
 use sha1::{Digest as Sha1Digest, Sha1};
-use sha2::{Digest, Sha256};
+use sha2::Sha256;
 use std::io::{self, Read, Write};
 
 use methods::{HASHER_ELF, HASHER_ID};
