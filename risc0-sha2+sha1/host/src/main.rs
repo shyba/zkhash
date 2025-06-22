@@ -50,7 +50,7 @@ fn prove() -> Result<()> {
     let sha256_hash: [u8; 32] = sha256_hasher.finalize().into();
 
     let env = ExecutorEnv::builder()
-        .write(&buffer)?
+        .write_slice(&buffer)
         .build()?;
 
     let prover = default_prover();
